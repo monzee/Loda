@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="personal" pattern="src[loda-compiler]:*..*||src[loda]:*..*||src[app]:ph.codeia.loda..*||test[app]:ph.codeia.loda.test..*" />
+</component>

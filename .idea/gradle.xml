@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/loda" />
+            <option value="$PROJECT_DIR$/loda-android" />
             <option value="$PROJECT_DIR$/loda-compiler" />
           </set>
         </option>

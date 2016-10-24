@@ -1,0 +1,12 @@
+<!--
+  ~ Copyright (c) 2016 by Mon Zafra.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ph.codeia.loda">
+
+    <application android:allowBackup="true" android:label="@string/app_name"
+        android:supportsRtl="true">
+
+    </application>
+
+</manifest>

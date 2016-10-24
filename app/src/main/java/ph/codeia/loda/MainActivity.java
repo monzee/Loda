@@ -5,17 +5,37 @@ import android.os.Bundle;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static ph.codeia.loda.MainActivity.INJECTOR;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private interface Component {
+    static class Loadables {
+        @Loda.Async(123)
+        String getId() {
+            return "abcde";
+        }
+
+        @Loda.Got(123)
+        void didGetId(String id) {}
+
+        @Loda.Lazy(32)
+        String getEmail() {
+            return "foobar@example.com";
+        }
+
+        @Loda.Got(32)
+        void didGetEmail(String email, Loda.Caught bugs) {}
+    }
+
+    interface Component {
         void inject(MainActivity activity);
     }
 
-    private static final int INJECTOR = 0;
-    private static final int ITEMS = 1;
+
+    private static final int INJECTOR = 10;
+    private static final int ITEMS = 5;
+    private static final int MORE = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Loda.Got(INJECTOR)
-    void got(Component injector) {
+    void inject(Component injector) {
         injector.inject(this);
     }
 
@@ -42,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Loda.Got(ITEMS)
-    void got(List<Integer> primes, Loda.Caught interrupted) {
+    void fetched(List<Integer> primes, Loda.Caught interrupted) {
         try {
             interrupted.rethrow();
             // show in an RV
@@ -52,4 +72,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Loda.Async(MORE)
+    Map<String, Set<Integer>> prettyComplicatedType() {
+        return null;
+    }
+
+    @Loda.Got(MORE)
+    void yesItIs(Map<String, Set<Integer>> xs) {
+
+    }
 }

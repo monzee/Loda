@@ -31,20 +31,13 @@ Define and annotate the producer and consumer methods:
 ~~~java
 public class MainActivity extends AppCompatActivity {
 
+    // ...
+
     private static final int DAGGER_COMPONENT = 1;
     private static final int LIST_OF_THINGS = 2;
 
-    @Inject MainPresenter presenter;
-    @Inject MainView view;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
     @Loda.Lazy(DAGGER_COMPONENT)
-    CrossConfigComponent activityScopedComponent() {
+    CrossConfigComponent activitySuperScopedComponent() {
         return ((MyApp) getApplication())
                 .rootComponent()
                 .crossConfigComponent(new CrossConfigModule());
@@ -56,17 +49,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Loda.Async(LIST_OF_THINGS)
-    List<Object> fetch() throws InterruptedException {
+    List<String> simulatedFetch() throws InterruptedException {
         Thread.sleep(5000);
         return Arrays.asList("s", "t", "u", "f", "f");
     }
 
     @Loda.Got(LIST_OF_THINGS)
-    void got(List<Object> stuff, Loda.Caught interrupted) {
+    void got(List<String> stuff, Loda.Caught interrupted) {
         try {
             interrupted.rethrow();
-            for (Object o : stuff) {
-                // do something with stuff
+            for (String o : stuff) {
+                view.show(o);
             }
         } catch (Exception e) {
             Toast.makeToast(e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -79,8 +72,6 @@ use it in `onCreate()`:
 ~~~java
 public class MainActivity extends AppCompatActivity {
 
-    private static final int DAGGER_COMPONENT = 1;
-
     @Inject MainPresenter presenter;
     @Inject MainView view;
 
@@ -88,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new MainActivityLoda(this).prepare(this);
+        AndroidLoda.of(this).prepare(this);
     }
 
     // ...
 }
 ~~~
-Your members are now ready to use after `onStart()`. The component instance
+Your members are now ready to use after `super.onStart()`. The component instance
 will persist across configuration changes. Consumer `got()` will be called with
 the list in ~5 seconds during the first run, instantly after rotation.
 
