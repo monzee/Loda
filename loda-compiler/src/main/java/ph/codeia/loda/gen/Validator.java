@@ -1,4 +1,8 @@
-package ph.codeia.loda;
+/*
+ * Copyright (c) 2016 by Mon Zafra.
+ */
+
+package ph.codeia.loda.gen;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
@@ -16,6 +20,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -62,7 +67,7 @@ public class Validator implements Iterable<TypeElement> {
 
     class CallPair implements CodeGenerator.Pair {
         final int id;
-        final TypeElement target;
+        final DeclaredType target;
         final ExecutableElement producer;
         final ExecutableElement consumer;
 
@@ -83,7 +88,7 @@ public class Validator implements Iterable<TypeElement> {
         }
 
         @Override
-        public TypeElement type() {
+        public DeclaredType type() {
             return target;
         }
 
@@ -204,7 +209,7 @@ public class Validator implements Iterable<TypeElement> {
         return item;
     }
 
-    private TypeElement checkReturnIsAssignableToFirstParam(
+    private DeclaredType checkReturnIsAssignableToFirstParam(
             ExecutableElement src,
             ExecutableElement dest
     ) throws TypeMismatch {
@@ -219,7 +224,7 @@ public class Validator implements Iterable<TypeElement> {
         if (!types.isAssignable(retval, param)) {
             throw new TypeMismatch(src, dest);
         }
-        return MoreTypes.asTypeElement(param);
+        return MoreTypes.asDeclared(param);
     }
 
 }

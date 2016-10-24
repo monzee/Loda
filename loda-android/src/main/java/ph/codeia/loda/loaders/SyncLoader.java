@@ -2,7 +2,7 @@
  * Copyright (c) 2016 by Mon Zafra.
  */
 
-package ph.codeia.loda;
+package ph.codeia.loda.loaders;
 
 import android.content.Context;
 import android.support.v4.content.Loader;

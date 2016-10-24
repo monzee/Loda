@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Loda.Got(MORE)
-    void yesItIs(Map<String, Set<Integer>> xs) {
-
+    void yesItIs(Map<String, Set<Integer>> xs, Loda.Caught errors) {
     }
 }

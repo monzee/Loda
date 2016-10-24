@@ -2,7 +2,7 @@
  * Copyright (c) 2016 by Mon Zafra.
  */
 
-package ph.codeia.loda;
+package ph.codeia.loda.gen;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -21,10 +21,16 @@ import javax.lang.model.element.Modifier;
 
 public class GenerateLoaders implements CodeGenerator {
 
+    private static final ClassName LODA_INTERFACE =
+            ClassName.get("ph.codeia.loda", "Loda");
     private static final ClassName BASE_CLASS =
-            ClassName.get("ph.codeia.loda", "BaseLoda");
+            ClassName.get("ph.codeia.loda.loaders", "BaseLoda");
+    private static final ClassName SYNC_LOADER =
+            ClassName.get("ph.codeia.loda.loaders", "SyncLoader");
+    private static final ClassName ASYNC_LOADER =
+            ClassName.get("ph.codeia.loda.loaders", "AsyncLoader");
     private static final ClassName ASYNC_RESULT =
-            ClassName.get("ph.codeia.loda", "AsyncLoader", "Result");
+            ClassName.get("ph.codeia.loda.loaders", "AsyncLoader", "Result");
     private static final ClassName CONTEXT =
             ClassName.get("android.content", "Context");
     private static final ClassName LOADER_MANAGER =
@@ -40,7 +46,7 @@ public class GenerateLoaders implements CodeGenerator {
 
     @Override
     public TypeSpec.Builder begin(TypeSpec.Builder partialClass) {
-        return partialClass.superclass(BASE_CLASS);
+        return partialClass.superclass(BASE_CLASS).addSuperinterface(LODA_INTERFACE);
     }
 
     @Override
@@ -65,16 +71,17 @@ public class GenerateLoaders implements CodeGenerator {
             MethodSpec.Builder onCreate = blankOnCreate();
             MethodSpec.Builder onFinish = blankOnFinish();
             MethodSpec.Builder onReset = blankOnReset();
-            TypeName payload = TypeName.get(p.type().asType());
+            TypeName payload = TypeName.get(p.type());
+            TypeName loader = ParameterizedTypeName.get(SYNC_LOADER, payload);
             String consumerParams = p.isUnaryConsumer()
                     ? "data.value"
-                    : "data.value, ph.codeia.loda.Loda.Caught.NOTHING";
+                    : "data.value, Caught.NOTHING";
             TypeSpec callbacks = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(LOADER_CALLBACKS, payload))
                     .addMethod(onCreate
                             .returns(ParameterizedTypeName.get(LOADER, payload))
-                            .addStatement("return new SyncLoader<$T>(context, host.$L())",
-                                    payload, p.producer().toString())
+                            .addStatement("return new $T(context, host.$L())",
+                                    loader, p.producer().toString())
                             .build())
                     .addMethod(onFinish
                             .addParameter(ParameterizedTypeName.get(LOADER, payload), "loader")
@@ -91,7 +98,7 @@ public class GenerateLoaders implements CodeGenerator {
             MethodSpec.Builder onCreate = blankOnCreate();
             MethodSpec.Builder onFinish = blankOnFinish();
             MethodSpec.Builder onReset = blankOnReset();
-            TypeName payload = TypeName.get(p.type().asType());
+            TypeName payload = TypeName.get(p.type());
             TypeName wrapper = ParameterizedTypeName.get(ASYNC_RESULT, payload);
             TypeSpec callable = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(CALLABLE, payload))
@@ -103,13 +110,13 @@ public class GenerateLoaders implements CodeGenerator {
                             .addStatement("return host.$L()", p.producer().toString())
                             .build())
                     .build();
+            TypeName loader = ParameterizedTypeName.get(ASYNC_LOADER, payload);
             String consumerParams = p.isUnaryConsumer() ? "data.value" : "data.value, data.error";
             TypeSpec callbacks = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(LOADER_CALLBACKS, wrapper))
                     .addMethod(onCreate
                             .returns(ParameterizedTypeName.get(LOADER, wrapper))
-                            .addStatement("return new AsyncLoader<$T>(context, $L)",
-                                    payload, callable)
+                            .addStatement("return new $T(context, $L)", loader, callable)
                             .build())
                     .addMethod(onFinish
                             .addParameter(ParameterizedTypeName.get(LOADER, payload), "loader")
@@ -126,14 +133,14 @@ public class GenerateLoaders implements CodeGenerator {
     }
 
     private static MethodSpec.Builder blankOnReset() {
-        return MethodSpec.methodBuilder("onResetLoader")
+        return MethodSpec.methodBuilder("onLoaderReset")
                     .returns(TypeName.VOID)
                     .addAnnotation(Override.class)
                     .addModifiers(Modifier.PUBLIC);
     }
 
     private static MethodSpec.Builder blankOnFinish() {
-        return MethodSpec.methodBuilder("onFinishLoading")
+        return MethodSpec.methodBuilder("onLoadFinished")
                     .returns(TypeName.VOID)
                     .addAnnotation(Override.class)
                     .addModifiers(Modifier.PUBLIC);

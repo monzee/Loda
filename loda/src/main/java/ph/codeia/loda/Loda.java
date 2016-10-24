@@ -121,8 +121,19 @@ public interface Loda {
         String value();
     }
 
+    /**
+     * Points back to the host class.
+     *
+     * Added to generated classes for the second round of annotation
+     * processing to produce a factory that maps hosts to generated classes.
+     */
     @Target(ElementType.TYPE)
-    @interface Gen {}
+    @interface Backlink {
+        /**
+         * The host class.
+         */
+        Class value();
+    }
 
     /**
      * Auxiliary class for clients of checked async producers.
