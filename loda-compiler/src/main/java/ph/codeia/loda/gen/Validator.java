@@ -20,7 +20,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -113,9 +112,9 @@ public class Validator implements Iterable<TypeElement> {
     private final Types types;
 
     private Set<TypeElement> hosts = new HashSet<>();
-    private Map<TypeElement, Map<Integer, ExecutableElement>> lazyByHostById = new HashMap<>();
-    private Map<TypeElement, Map<Integer, ExecutableElement>> asyncByHostById = new HashMap<>();
-    private Map<TypeElement, Map<Integer, ExecutableElement>> gotByHostById = new HashMap<>();
+    private Map<TypeElement, Map<Integer, ExecutableElement>> lazyByIdByHost = new HashMap<>();
+    private Map<TypeElement, Map<Integer, ExecutableElement>> asyncByIdByHost = new HashMap<>();
+    private Map<TypeElement, Map<Integer, ExecutableElement>> gotByIdByHost = new HashMap<>();
 
     Validator(Elements elems, Types types) {
         this.elems = elems;
@@ -125,8 +124,8 @@ public class Validator implements Iterable<TypeElement> {
     public void addLazy(int id, Element elem) throws DuplicateId {
         TypeElement host = enclosingClass(elem);
         hosts.add(host);
-        Map<Integer, ExecutableElement> lazies = getOrInit(lazyByHostById, host);
-        Map<Integer, ExecutableElement> asyncs = getOrInit(asyncByHostById, host);
+        Map<Integer, ExecutableElement> lazies = getOrInit(lazyByIdByHost, host);
+        Map<Integer, ExecutableElement> asyncs = getOrInit(asyncByIdByHost, host);
         if (lazies.containsKey(id) || asyncs.containsKey(id)) {
             throw new DuplicateId(id, "producer", elem);
         }
@@ -136,8 +135,8 @@ public class Validator implements Iterable<TypeElement> {
     public void addAsync(int id, Element elem) throws DuplicateId {
         TypeElement host = enclosingClass(elem);
         hosts.add(host);
-        Map<Integer, ExecutableElement> lazies = getOrInit(lazyByHostById, host);
-        Map<Integer, ExecutableElement> asyncs = getOrInit(asyncByHostById, host);
+        Map<Integer, ExecutableElement> lazies = getOrInit(lazyByIdByHost, host);
+        Map<Integer, ExecutableElement> asyncs = getOrInit(asyncByIdByHost, host);
         if (lazies.containsKey(id) || asyncs.containsKey(id)) {
             throw new DuplicateId(id, "producer", elem);
         }
@@ -147,7 +146,7 @@ public class Validator implements Iterable<TypeElement> {
     public void addGot(int id, Element elem) throws DuplicateId {
         TypeElement host = enclosingClass(elem);
         hosts.add(host);
-        Map<Integer, ExecutableElement> gots = getOrInit(gotByHostById, host);
+        Map<Integer, ExecutableElement> gots = getOrInit(gotByIdByHost, host);
         if (gots.containsKey(id)) {
             throw new DuplicateId(id, "consumer", elem);
         }
@@ -156,8 +155,8 @@ public class Validator implements Iterable<TypeElement> {
 
     public List<CallPair> syncPairs(TypeElement host) throws TypeMismatch, NoMatchingPair {
         List<CallPair> pairs = new ArrayList<>();
-        Map<Integer, ExecutableElement> lazyById = lazyByHostById.get(host);
-        Map<Integer, ExecutableElement> gotById = gotByHostById.get(host);
+        Map<Integer, ExecutableElement> lazyById = lazyByIdByHost.get(host);
+        Map<Integer, ExecutableElement> gotById = gotByIdByHost.get(host);
         for (int id : lazyById.keySet()) {
             if (gotById.containsKey(id)) {
                 pairs.add(new CallPair(id, lazyById.get(id), gotById.get(id)));
@@ -171,8 +170,8 @@ public class Validator implements Iterable<TypeElement> {
 
     public List<CallPair> asyncPairs(TypeElement host) throws TypeMismatch, NoMatchingPair {
         List<CallPair> pairs = new ArrayList<>();
-        Map<Integer, ExecutableElement> asyncById = asyncByHostById.get(host);
-        Map<Integer, ExecutableElement> gotById = gotByHostById.get(host);
+        Map<Integer, ExecutableElement> asyncById = asyncByIdByHost.get(host);
+        Map<Integer, ExecutableElement> gotById = gotByIdByHost.get(host);
         for (int id : asyncById.keySet()) {
             if (gotById.containsKey(id)) {
                 pairs.add(new CallPair(id, asyncById.get(id), gotById.get(id)));

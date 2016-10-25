@@ -7,7 +7,9 @@ package ph.codeia.loda.loaders;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 
 /**
  * This file is a part of the Loda project.
@@ -21,12 +23,15 @@ public class AsyncLoader<T> extends AsyncTaskLoader<AsyncLoader.Result<T>> {
         private boolean ready = false;
     }
 
+    private static final String PREEMPTED =
+            "The producer function got GCed before I had a chance to call it.";
+
     private final Result<T> result = new Result<>();
-    private Callable<T> block;
+    private WeakReference<Callable<T>> block;
 
     public AsyncLoader(Context context, Callable<T> block) {
         super(context);
-        this.block = block;
+        this.block = new WeakReference<>(block);
     }
 
     @Override
@@ -34,12 +39,16 @@ public class AsyncLoader<T> extends AsyncTaskLoader<AsyncLoader.Result<T>> {
         if (result.ready) {
             return result;
         }
+        Callable<T> producer = block.get();
+        if (producer == null) {
+            result.error = new CancellationException(PREEMPTED);
+            return result;
+        }
         try {
-            result.value = block.call();
+            result.value = producer.call();
         } catch (Exception e) {
             result.error = e;
         }
-        block = null;
         return result;
     }
 

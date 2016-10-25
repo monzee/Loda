@@ -13,14 +13,14 @@ import java.util.concurrent.TimeoutException;
  * This file is a part of the Loda project.
  */
 
-public class HeavenOrHell<T> implements Future<T> {
+class HeavenOrHell<T> implements Future<T> {
 
     private enum State { WAIT, OK, ERROR }
     private State status = State.WAIT;
     private T value;
     private Exception error;
 
-    public void pass(T value) {
+    void pass(T value) {
         if (status != State.WAIT) {
             return;
         }
@@ -31,7 +31,7 @@ public class HeavenOrHell<T> implements Future<T> {
         }
     }
 
-    public void fail(Exception error) {
+    void fail(Exception error) {
         if (status != State.WAIT) {
             return;
         }

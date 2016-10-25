@@ -21,8 +21,6 @@ import javax.lang.model.element.Modifier;
 
 public class GenerateLoaders implements CodeGenerator {
 
-    private static final ClassName LODA_INTERFACE =
-            ClassName.get("ph.codeia.loda", "Loda");
     private static final ClassName BASE_CLASS =
             ClassName.get("ph.codeia.loda.loaders", "BaseLoda");
     private static final ClassName SYNC_LOADER =
@@ -31,6 +29,8 @@ public class GenerateLoaders implements CodeGenerator {
             ClassName.get("ph.codeia.loda.loaders", "AsyncLoader");
     private static final ClassName ASYNC_RESULT =
             ClassName.get("ph.codeia.loda.loaders", "AsyncLoader", "Result");
+    private static final ClassName LODA_CAUGHT =
+            ClassName.get("ph.codeia.loda", "Loda", "Caught");
     private static final ClassName CONTEXT =
             ClassName.get("android.content", "Context");
     private static final ClassName LOADER_MANAGER =
@@ -46,7 +46,7 @@ public class GenerateLoaders implements CodeGenerator {
 
     @Override
     public TypeSpec.Builder begin(TypeSpec.Builder partialClass) {
-        return partialClass.superclass(BASE_CLASS).addSuperinterface(LODA_INTERFACE);
+        return partialClass.superclass(BASE_CLASS);
     }
 
     @Override
@@ -73,9 +73,9 @@ public class GenerateLoaders implements CodeGenerator {
             MethodSpec.Builder onReset = blankOnReset();
             TypeName payload = box(TypeName.get(p.type()));
             TypeName loader = ParameterizedTypeName.get(SYNC_LOADER, payload);
-            String consumerParams = p.isUnaryConsumer()
-                    ? "data"
-                    : "data, Caught.NOTHING";
+            CodeBlock consumerParams = p.isUnaryConsumer()
+                    ? CodeBlock.of("data")
+                    : CodeBlock.of("data, $T.NOTHING", LODA_CAUGHT);
             TypeSpec callbacks = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(LOADER_CALLBACKS, payload))
                     .addMethod(onCreate
