@@ -21,6 +21,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -67,7 +68,7 @@ public class Validator implements Iterable<TypeElement> {
 
     class CallPair implements CodeGenerator.Pair {
         final int id;
-        final DeclaredType target;
+        final TypeMirror target;
         final ExecutableElement producer;
         final ExecutableElement consumer;
 
@@ -88,7 +89,7 @@ public class Validator implements Iterable<TypeElement> {
         }
 
         @Override
-        public DeclaredType type() {
+        public TypeMirror type() {
             return target;
         }
 
@@ -209,7 +210,7 @@ public class Validator implements Iterable<TypeElement> {
         return item;
     }
 
-    private DeclaredType checkReturnIsAssignableToFirstParam(
+    private TypeMirror checkReturnIsAssignableToFirstParam(
             ExecutableElement src,
             ExecutableElement dest
     ) throws TypeMismatch {
@@ -224,7 +225,11 @@ public class Validator implements Iterable<TypeElement> {
         if (!types.isAssignable(retval, param)) {
             throw new TypeMismatch(src, dest);
         }
-        return MoreTypes.asDeclared(param);
+        if (param.getKind() == TypeKind.DECLARED) {
+            return MoreTypes.asDeclared(param);
+        } else {
+            return MoreTypes.asPrimitiveType(param);
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.lang.model.element.Name;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 
 /**
  * This file is a part of the Loda project.
@@ -21,7 +22,7 @@ public interface CodeGenerator {
 
     interface Pair {
         int id();
-        DeclaredType type();
+        TypeMirror type();
         Name producer();
         Name consumer();
         boolean isUnaryConsumer();

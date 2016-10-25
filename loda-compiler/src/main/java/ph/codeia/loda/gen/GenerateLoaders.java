@@ -71,7 +71,7 @@ public class GenerateLoaders implements CodeGenerator {
             MethodSpec.Builder onCreate = blankOnCreate();
             MethodSpec.Builder onFinish = blankOnFinish();
             MethodSpec.Builder onReset = blankOnReset();
-            TypeName payload = TypeName.get(p.type());
+            TypeName payload = box(TypeName.get(p.type()));
             TypeName loader = ParameterizedTypeName.get(SYNC_LOADER, payload);
             String consumerParams = p.isUnaryConsumer()
                     ? "data"
@@ -98,7 +98,7 @@ public class GenerateLoaders implements CodeGenerator {
             MethodSpec.Builder onCreate = blankOnCreate();
             MethodSpec.Builder onFinish = blankOnFinish();
             MethodSpec.Builder onReset = blankOnReset();
-            TypeName payload = TypeName.get(p.type());
+            TypeName payload = box(TypeName.get(p.type()));
             TypeName wrapper = ParameterizedTypeName.get(ASYNC_RESULT, payload);
             TypeSpec callable = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(CALLABLE, payload))
@@ -154,4 +154,11 @@ public class GenerateLoaders implements CodeGenerator {
                     .addParameter(BUNDLE, "args");
     }
 
+    private static TypeName box(TypeName mightBePrimitive) {
+        if (mightBePrimitive.isPrimitive()) {
+            return mightBePrimitive.box();
+        } else {
+            return mightBePrimitive;
+        }
+    }
 }

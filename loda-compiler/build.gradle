@@ -17,3 +17,10 @@ dependencies {
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
+
+// make android studio test runner find the test resources
+task copyTestResources(type: Copy) {
+    from sourceSets.test.resources
+    into sourceSets.test.output.classesDir
+}
+processTestResources.dependsOn copyTestResources
