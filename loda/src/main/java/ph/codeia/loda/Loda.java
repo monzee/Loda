@@ -180,9 +180,8 @@ public interface Loda {
          *              otherwise you'll get a deadlock.
          * @param <T> The type of the success value.
          * @return {@link Future#get()} will block until one of the {@link Box}
-         * objects is invoked. {@link Future#cancel(boolean) Cancelling} has no
-         * effect. Use {@link Future#get(long, TimeUnit)} to make sure that you
-         * won't block the thread forever.
+         * objects is invoked. Use {@link Future#get(long, TimeUnit)} to make
+         * sure that you won't block the thread forever.
          */
         public static <T> Future<T> of(Syncer<T> block) {
             final HeavenOrHell<T> either = new HeavenOrHell<>();

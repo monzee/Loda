@@ -4,6 +4,7 @@
 
 package ph.codeia.loda;
 
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -44,12 +45,16 @@ class HeavenOrHell<T> implements Future<T> {
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
-        return false;
+        if (!mayInterruptIfRunning || status != State.WAIT) {
+            return false;
+        }
+        fail(new CancellationException());
+        return true;
     }
 
     @Override
     public boolean isCancelled() {
-        return false;
+        return status == State.ERROR && error instanceof CancellationException;
     }
 
     @Override
@@ -58,12 +63,16 @@ class HeavenOrHell<T> implements Future<T> {
     }
 
     @Override
-    public T get() throws InterruptedException, ExecutionException {
+    public T get() throws InterruptedException, ExecutionException, CancellationException {
         while (true) switch (status) {
             case OK:
                 return value;
             case ERROR:
-                throw new ExecutionException(error);
+                if (error instanceof CancellationException) {
+                    throw (CancellationException) error;
+                } else {
+                    throw new ExecutionException(error);
+                }
             case WAIT:
                 synchronized (this) {
                     wait();
@@ -74,7 +83,7 @@ class HeavenOrHell<T> implements Future<T> {
     @Override
     public T get(
             long timeout, TimeUnit unit
-    ) throws InterruptedException, ExecutionException, TimeoutException {
+    ) throws InterruptedException, ExecutionException, TimeoutException, CancellationException {
         if (timeout <= 0) {
             return get();
         }
@@ -83,7 +92,11 @@ class HeavenOrHell<T> implements Future<T> {
             case OK:
                 return value;
             case ERROR:
-                throw new ExecutionException(error);
+                if (error instanceof CancellationException) {
+                    throw (CancellationException) error;
+                } else {
+                    throw new ExecutionException(error);
+                }
             case WAIT:
                 if (remaining <= 0) {
                     throw new TimeoutException();

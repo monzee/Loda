@@ -7,7 +7,7 @@ package ph.codeia.loda.loaders;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 
@@ -27,11 +27,11 @@ public class AsyncLoader<T> extends AsyncTaskLoader<AsyncLoader.Result<T>> {
             "The producer function got GCed before I had a chance to call it.";
 
     private final Result<T> result = new Result<>();
-    private WeakReference<Callable<T>> block;
+    private SoftReference<Callable<T>> block;
 
     public AsyncLoader(Context context, Callable<T> block) {
         super(context);
-        this.block = new WeakReference<>(block);
+        this.block = new SoftReference<>(block);
     }
 
     @Override
