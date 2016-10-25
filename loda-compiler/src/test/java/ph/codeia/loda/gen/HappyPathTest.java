@@ -9,36 +9,46 @@ import com.google.testing.compile.JavaFileObjects;
 import com.google.testing.compile.JavaSourceSubjectFactory;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 /**
  * This file is a part of the Loda project.
  */
 
+@RunWith(Parameterized.class)
 public class HappyPathTest {
 
-    private void ok(String filename) {
+    @Parameterized.Parameter public String filename;
+
+    @Test
+    public void ok() {
         Truth.assertAbout(JavaSourceSubjectFactory.javaSource())
-                .that(JavaFileObjects.forResource(filename))
+                .that(JavaFileObjects.forResource("typical-usage/" + filename + ".java"))
                 .processedWith(new LodaProcessor())
                 .compilesWithoutError();
     }
 
-    @Test
-    public void typical_usage() {
-        ok("typical-usage/SingleSyncPair.java");
-        ok("typical-usage/SingleAsyncPair.java");
-        ok("typical-usage/OnePairOfEach.java");
-        ok("typical-usage/CheckedAsyncProducer.java");
-        ok("typical-usage/CheckedAsyncClientHandlesError.java");
-        ok("typical-usage/UncheckedAsyncClientHandlesError.java");
-        ok("typical-usage/UncheckedSyncClientHandlesError.java");
-        ok("typical-usage/NestedHost.java");
-        ok("typical-usage/MultipleNestedHosts.java");
-        ok("typical-usage/DeeplyNestedHost.java");
-        ok("typical-usage/NestedInInterface.java");
-        ok("typical-usage/NestedInEnum.java");
-        ok("typical-usage/DoubleAnnotatedProducer.java");
-        ok("typical-usage/OverloadedName.java");
+    @Parameterized.Parameters(name = "{0}")
+    public static String[] typical_usage() {
+        return new String[] {
+                "SingleSyncPair",
+                "SingleAsyncPair",
+                "OnePairOfEach",
+                "CheckedAsyncProducer",
+                "CheckedAsyncClientHandlesError",
+                "UncheckedAsyncClientHandlesError",
+                "UncheckedSyncClientHandlesError",
+                "NestedHost",
+                "MultipleNestedHosts",
+                "DeeplyNestedHost",
+                "NestedInInterface",
+                "NestedInEnum",
+                "DoubleAnnotatedProducer",
+                "OverloadedName",
+                "PrimitivePayload",
+                "CheckedSyncProducer",  // false positive! doesn't typecheck
+        };
     }
 
 }
