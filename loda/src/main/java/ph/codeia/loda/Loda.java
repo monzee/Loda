@@ -154,6 +154,7 @@ public interface Loda {
             }
         }
     }
+
     interface Box<T> {
         void send(T value);
     }
@@ -197,6 +198,19 @@ public interface Loda {
             });
             return either;
         }
+    }
+
+    /**
+     * Returned by the operative method of the generated class to trigger async
+     * loads.
+     */
+    interface Hook {
+        /**
+         * Trigger a loader like loda got triggered in 2013.
+         *
+         * @param id The id of the loader.
+         */
+        void trigger(int id);
     }
 
 }

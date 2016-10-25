@@ -42,7 +42,7 @@ public class Validator implements Iterable<TypeElement> {
     class TypeMismatch extends ProcessingError {
         TypeMismatch(Element producer, Element consumer) {
             super(String.format(
-                    "Return type of %s and param type of %s are incompatible",
+                    "[mismatch] Return type of %s and param type of %s are incompatible",
                     producer,
                     consumer
             ), producer);
@@ -52,7 +52,7 @@ public class Validator implements Iterable<TypeElement> {
     class DuplicateId extends ProcessingError {
         DuplicateId(int id, String type, Element e) {
             super(String.format(
-                    "There's already a %s with id #%d", type, id
+                    "[dupe] There's already a %s with id #%d", type, id
             ), e);
         }
     }
@@ -60,7 +60,7 @@ public class Validator implements Iterable<TypeElement> {
     class NoMatchingPair extends ProcessingError {
         NoMatchingPair(int id, String missingHalf, Element e) {
             super(String.format(
-                    "No matching %s for loader #%d", missingHalf, id
+                    "[orphan] No matching %s for loader #%d", missingHalf, id
             ), e);
         }
     }

@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Loda.Lazy(INJECTOR)
     Component daggerComponent() {
-        // return DaggerComponent.builder().build()
         return null;
     }
 
@@ -79,5 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Loda.Got(MORE)
     void yesItIs(Map<String, Set<Integer>> xs, Loda.Caught errors) {
+
     }
+
 }

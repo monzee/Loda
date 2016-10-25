@@ -74,8 +74,8 @@ public class GenerateLoaders implements CodeGenerator {
             TypeName payload = TypeName.get(p.type());
             TypeName loader = ParameterizedTypeName.get(SYNC_LOADER, payload);
             String consumerParams = p.isUnaryConsumer()
-                    ? "data.value"
-                    : "data.value, Caught.NOTHING";
+                    ? "data"
+                    : "data, Caught.NOTHING";
             TypeSpec callbacks = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(LOADER_CALLBACKS, payload))
                     .addMethod(onCreate
@@ -119,12 +119,12 @@ public class GenerateLoaders implements CodeGenerator {
                             .addStatement("return new $T(context, $L)", loader, callable)
                             .build())
                     .addMethod(onFinish
-                            .addParameter(ParameterizedTypeName.get(LOADER, payload), "loader")
-                            .addParameter(payload, "data")
+                            .addParameter(ParameterizedTypeName.get(LOADER, wrapper), "loader")
+                            .addParameter(wrapper, "data")
                             .addStatement("host.$L($L)", p.consumer().toString(), consumerParams)
                             .build())
                     .addMethod(onReset
-                            .addParameter(ParameterizedTypeName.get(LOADER, payload), "loader")
+                            .addParameter(ParameterizedTypeName.get(LOADER, wrapper), "loader")
                             .build())
                     .build();
             body.addStatement("manager.initLoader($L, null, $L)", p.id(), callbacks);
