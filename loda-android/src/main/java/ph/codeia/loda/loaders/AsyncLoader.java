@@ -27,7 +27,7 @@ public class AsyncLoader<T> extends AsyncTaskLoader<AsyncLoader.Result<T>> {
             "The producer function got GCed before I had a chance to call it.";
 
     private final Result<T> result = new Result<>();
-    private SoftReference<Callable<T>> block;
+    private final SoftReference<Callable<T>> block;
 
     public AsyncLoader(Context context, Callable<T> block) {
         super(context);
