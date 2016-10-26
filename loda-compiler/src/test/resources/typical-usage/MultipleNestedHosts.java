@@ -2,8 +2,8 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class MultipleNestedHosts {
-    class Here {
+public class MultipleNestedHosts {
+    public class Here {
         @Loda.Lazy(1)
         String data() {
             return "foo";
@@ -13,7 +13,7 @@ class MultipleNestedHosts {
         void got(String data) {
         }
     }
-    class There {
+    public class There {
         @Loda.Lazy(1)
         String data() {
             return "foo";
@@ -23,7 +23,7 @@ class MultipleNestedHosts {
         void got(String data) {
         }
     }
-    class Everywhere {
+    public class Everywhere {
         @Loda.Lazy(1)
         String data() {
             return "foo";

@@ -2,9 +2,9 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-enum NestedInEnum {
+public enum NestedInEnum {
     A, B, C;
-    class Here {
+    public class Here {
         @Loda.Lazy(1)
         String data() {
             return "foo";

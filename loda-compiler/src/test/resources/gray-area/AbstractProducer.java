@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-abstract class AbstractProducer {
+public abstract class AbstractProducer {
     @Loda.Lazy(1)
     abstract int data();
 

@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-interface InterfaceHost {
+public interface InterfaceHost {
     @Loda.Lazy(1)
     int data();
 

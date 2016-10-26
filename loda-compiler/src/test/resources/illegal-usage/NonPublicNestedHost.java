@@ -2,8 +2,8 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-public class NestedHost {
-    public class Here {
+public class NonPublicNestedHost {
+    class Here {
         @Loda.Lazy(1)
         String data() {
             return "foo";

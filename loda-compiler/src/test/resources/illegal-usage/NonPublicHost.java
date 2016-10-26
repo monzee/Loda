@@ -2,9 +2,9 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-public class CheckedSyncProducer {
+class NonPublicHost {
     @Loda.Lazy(1)
-    String data() throws Throwable {
+    String data() {
         return "foo";
     }
 

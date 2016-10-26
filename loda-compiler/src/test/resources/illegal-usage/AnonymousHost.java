@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class AnonymousHost {
+public class AnonymousHost {
     static void main() {
         new Object() {
             @Loda.Lazy(1)

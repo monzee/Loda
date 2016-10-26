@@ -224,10 +224,13 @@ public class Validator implements Iterable<TypeElement> {
         if (!types.isAssignable(retval, param)) {
             throw new TypeMismatch(src, dest);
         }
-        if (param.getKind() == TypeKind.DECLARED) {
-            return MoreTypes.asDeclared(param);
-        } else {
-            return MoreTypes.asPrimitiveType(param);
+        switch (param.getKind()) {
+            case DECLARED:
+                return MoreTypes.asDeclared(param);
+            case TYPEVAR:
+                return MoreTypes.asTypeVariable(param);
+            default:
+                return MoreTypes.asPrimitiveType(param);
         }
     }
 

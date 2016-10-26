@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class OverloadedName {
+public class OverloadedName {
     @Loda.Lazy(1)
     String data() {
         return "foo";

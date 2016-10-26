@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-abstract class AbstractClient {
+public abstract class AbstractClient {
     @Loda.Lazy(1)
     int data() {
         return 123;

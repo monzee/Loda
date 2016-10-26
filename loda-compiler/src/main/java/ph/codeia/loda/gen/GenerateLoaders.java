@@ -56,7 +56,7 @@ public class GenerateLoaders implements CodeGenerator {
                         .returns(TypeName.VOID)
                         .addModifiers(Modifier.PROTECTED)
                         .addParameter(LOADER_MANAGER, "manager")
-                        .addParameter(CONTEXT, "context")
+                        .addParameter(CONTEXT, "context", Modifier.FINAL)
                         .addAnnotation(Override.class),
         };
     }
@@ -111,7 +111,9 @@ public class GenerateLoaders implements CodeGenerator {
                             .build())
                     .build();
             TypeName loader = ParameterizedTypeName.get(ASYNC_LOADER, payload);
-            String consumerParams = p.isUnaryConsumer() ? "data.value" : "data.value, data.error";
+            CodeBlock consumerParams = p.isUnaryConsumer() ?
+                    CodeBlock.of("data.value") :
+                    CodeBlock.of("data.value, new $T(data.error)", LODA_CAUGHT);
             TypeSpec callbacks = TypeSpec.anonymousClassBuilder("")
                     .superclass(ParameterizedTypeName.get(LOADER_CALLBACKS, wrapper))
                     .addMethod(onCreate

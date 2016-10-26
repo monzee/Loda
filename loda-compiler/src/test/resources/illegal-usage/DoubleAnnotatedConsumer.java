@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class DoubleAnnotatedConsumer {
+public class DoubleAnnotatedConsumer {
     @Loda.Lazy(1)
     String one() {
         return "foo";

@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class PayloadTypeMismatch {
+public class PayloadTypeMismatch {
     @Loda.Lazy(1)
     String data() {
         return "foo";

@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class StaticProducer {
+public class StaticProducer {
     @Loda.Lazy(1)
     static int data() {
         return 1;

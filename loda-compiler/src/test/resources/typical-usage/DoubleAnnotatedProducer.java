@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class DoubleAnnotatedProducer {
+public class DoubleAnnotatedProducer {
     @Loda.Lazy(1)
     @Loda.Async(2)
     String both() {

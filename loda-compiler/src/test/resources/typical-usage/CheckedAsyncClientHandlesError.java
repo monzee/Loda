@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class CheckedAsyncProducer {
+public class CheckedAsyncClientHandlesError {
     @Loda.Async(1)
     String data() throws Throwable {
         return "foo";

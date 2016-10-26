@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class InvisibleProducer {
+public class InvisibleProducer {
     @Loda.Lazy(1)
     protected int data() {
         return 123;

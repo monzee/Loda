@@ -2,7 +2,7 @@ package loda.test;
 
 import ph.codeia.loda.Loda;
 
-class PrimitivePayload {
+public class PrimitivePayload {
     @Loda.Lazy(1)
     int data() {
         return 123;
