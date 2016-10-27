@@ -4,7 +4,7 @@ import ph.codeia.loda.Loda;
 
 public class CheckedAsyncProducer {
     @Loda.Async(1)
-    String data() throws Throwable {
+    String data() throws Exception {
         return "foo";
     }
 

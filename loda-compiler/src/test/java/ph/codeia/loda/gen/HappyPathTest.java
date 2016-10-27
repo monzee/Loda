@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.IOException;
-
 /**
  * This file is a part of the Loda project.
  */
@@ -50,8 +48,7 @@ public class HappyPathTest {
                 "OverloadedName",
                 "PrimitivePayload",
                 "CheckedSyncProducer",  // false positive! doesn't typecheck
-                "NoProducer",
-                "ParameterizedHost",  // false positive! generated class isn't parameterized
+                // "NoProducer",
         };
     }
 

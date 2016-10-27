@@ -1,1 +1,1 @@
-include ':app', ':loda', ':loda-compiler', ':loda-android'
+include ':app', ':loda', ':loda-compiler', ':loda-android', ':akke'

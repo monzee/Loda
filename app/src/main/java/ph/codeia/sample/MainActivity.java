@@ -1,16 +1,23 @@
-package ph.codeia.loda;
+/*
+ * Copyright (c) 2016 by Mon Zafra
+ */
 
-import android.support.v7.app.AppCompatActivity;
+package ph.codeia.sample;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ph.codeia.loda.AndroidLoda;
+import ph.codeia.loda.Loda;
+
 public class MainActivity extends AppCompatActivity {
 
-    static class Loadables {
+    public static class Loadables {
         @Loda.Async(123)
         String getId() {
             return "abcde";
@@ -26,6 +33,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Loda.Got(32)
         void didGetEmail(String email, Loda.Caught bugs) {}
+
+        @Loda.Lazy(1234)
+        String dupe() {
+            return "zyxw";
+        }
+
+        @Loda.Got(1234)
+        void dupe(String s) {
+        }
     }
 
     interface Component {
@@ -41,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // new MainActivityLoda(this).prepare(this);
+        AndroidLoda.of(this).prepare(this);
+        AndroidLoda.of(new Loadables()).prepare(this);
     }
 
     @Loda.Lazy(INJECTOR)

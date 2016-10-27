@@ -10,7 +10,6 @@ import com.google.testing.compile.JavaSourcesSubjectFactory;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class MetaLodaTest {
     public void creates_a_meta_factory() {
         List<JavaFileObject> files = new ArrayList<>();
         for (String filename : new String[] {
-                "CheckedSyncProducer",
+                "CheckedAsyncProducer",
                 "OnePairOfEach",
                 "SingleAsyncPair",
         }) {
@@ -35,7 +34,7 @@ public class MetaLodaTest {
         }
         Truth.assertAbout(JavaSourcesSubjectFactory.javaSources())
                 .that(files)
-                .processedWith(new LodaProcessor(), new MetaProcessor("/tmp"))
-                .compilesWithoutWarnings();
+                .processedWith(new LodaProcessor("/tmp"), new MetaProcessor("/tmp"))
+                .compilesWithoutError();
     }
 }

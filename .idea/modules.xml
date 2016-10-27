@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Loda.iml" filepath="$PROJECT_DIR$/Loda.iml" />
+      <module fileurl="file://$PROJECT_DIR$/akke/akke.iml" filepath="$PROJECT_DIR$/akke/akke.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/loda/loda.iml" filepath="$PROJECT_DIR$/loda/loda.iml" />
       <module fileurl="file://$PROJECT_DIR$/loda-android/loda-android.iml" filepath="$PROJECT_DIR$/loda-android/loda-android.iml" />
