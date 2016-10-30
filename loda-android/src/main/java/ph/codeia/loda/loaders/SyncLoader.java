@@ -20,6 +20,10 @@ public class SyncLoader<T> extends Loader<T> {
         this.value = value;
     }
 
+    public T value() {
+        return value;
+    }
+
     @Override
     protected void onStartLoading() {
         deliverResult(value);

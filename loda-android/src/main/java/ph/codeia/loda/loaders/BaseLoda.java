@@ -9,20 +9,24 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 
+import ph.codeia.loda.Loda;
+
 /**
  * This file is a part of the Loda project.
  */
 
 public abstract class BaseLoda {
 
-    public void prepare(FragmentActivity activity) {
-        prepare(activity.getSupportLoaderManager(), activity.getApplicationContext());
+    protected static final String BAD_ID = "ID not found in loader registry.";
+
+    public Loda.Hook prepare(FragmentActivity activity) {
+        return prepare(activity.getSupportLoaderManager(), activity.getApplicationContext());
     }
 
-    public void prepare(Fragment fragment) {
-        prepare(fragment.getLoaderManager(), fragment.getContext());
+    public Loda.Hook prepare(Fragment fragment) {
+        return prepare(fragment.getLoaderManager(), fragment.getContext());
     }
 
-    protected abstract void prepare(LoaderManager manager, Context context);
+    protected abstract Loda.Hook prepare(LoaderManager manager, Context context);
 
 }

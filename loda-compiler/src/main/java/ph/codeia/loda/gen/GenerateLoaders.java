@@ -19,6 +19,7 @@ import javax.lang.model.element.Modifier;
  * This file is a part of the Loda project.
  */
 
+@Deprecated
 public class GenerateLoaders implements CodeGenerator {
 
     private static final ClassName BASE_CLASS =

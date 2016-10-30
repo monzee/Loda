@@ -29,6 +29,7 @@ import javax.lang.model.util.Types;
  * This file is a part of the Loda project.
  */
 
+@Deprecated
 public class Validator implements Iterable<TypeElement> {
 
     class ProcessingError extends Exception {

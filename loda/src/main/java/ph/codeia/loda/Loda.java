@@ -92,6 +92,7 @@ public interface Loda {
      * This allows {@link Async}- or {@link Lazy}- annotated methods to be void
      * or not have a corresponding {@link Got} method.
      */
+    @Deprecated
     @Target(ElementType.METHOD)
     @interface FireAndForget {}
 
@@ -102,6 +103,7 @@ public interface Loda {
      * This allows {@link Got}-annotated methods to not have a corresponding
      * {@link Async} or {@link Lazy} producer.
      */
+    @Deprecated
     @Target(ElementType.METHOD)
     @interface ShotInTheDark {}
 
@@ -136,7 +138,7 @@ public interface Loda {
     }
 
     /**
-     * Auxiliary class for clients of checked async producers.
+     * Auxiliary class for clients of checked producers.
      */
     class Caught {
 
@@ -206,11 +208,21 @@ public interface Loda {
      */
     interface Hook {
         /**
-         * Trigger a loader like loda got triggered in 2013.
+         * Triggers an async loader like loda got triggered in 2013.
          *
          * @param id The id of the loader.
          */
         void trigger(int id);
+
+        /**
+         * Gets the result of a {@link Lazy} method.
+         *
+         * @param id The key.
+         * @param fallback The value to return if the key is not registered.
+         * @param <T> The type of the value.
+         * @return The return value of the corresponding producer or fallback
+         */
+        <T> T get(int id, T fallback);
     }
 
 }

@@ -25,7 +25,7 @@ public class HappyPathTest {
     public void ok() {
         Truth.assertAbout(JavaSourceSubjectFactory.javaSource())
                 .that(JavaFileObjects.forResource("typical-usage/" + filename + ".java"))
-                .processedWith(new LodaProcessor("/tmp"))
+                .processedWith(new AndroidLodaProcessor("/tmp"))
                 .compilesWithoutError();
     }
 
@@ -36,7 +36,9 @@ public class HappyPathTest {
                 "SingleAsyncPair",
                 "OnePairOfEach",
                 "CheckedAsyncProducer",
+                "CheckedSyncProducer",
                 "CheckedAsyncClientHandlesError",
+                "CheckedSyncClientHandlesError",
                 "UncheckedAsyncClientHandlesError",
                 "UncheckedSyncClientHandlesError",
                 "NestedHost",
@@ -47,8 +49,8 @@ public class HappyPathTest {
                 "DoubleAnnotatedProducer",
                 "OverloadedName",
                 "PrimitivePayload",
-                "CheckedSyncProducer",  // false positive! doesn't typecheck
-                // "NoProducer",
+                "NoProducer",
+                "NoClient",
         };
     }
 

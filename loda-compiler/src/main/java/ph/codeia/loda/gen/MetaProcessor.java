@@ -35,6 +35,7 @@ import ph.codeia.loda.Loda;
  * @author mon
  */
 
+@Deprecated
 @AutoService(Processor.class)
 public class MetaProcessor extends AbstractProcessor {
 

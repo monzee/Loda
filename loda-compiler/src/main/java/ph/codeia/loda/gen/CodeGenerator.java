@@ -11,13 +11,13 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.List;
 
 import javax.lang.model.element.Name;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 /**
  * This file is a part of the Loda project.
  */
 
+@Deprecated
 public interface CodeGenerator {
 
     interface Pair {

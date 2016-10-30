@@ -10,6 +10,7 @@ import com.google.testing.compile.JavaSourcesSubjectFactory;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,9 @@ public class MetaLodaTest {
         }
         Truth.assertAbout(JavaSourcesSubjectFactory.javaSources())
                 .that(files)
-                .processedWith(new LodaProcessor("/tmp"), new MetaProcessor("/tmp"))
+                .processedWith(new LodaProcessor(), new MetaProcessor("/tmp"))
                 .compilesWithoutError();
+        Truth.assertThat(new File("/tmp/ph/codeia/loda/AndroidLoda.java").canRead())
+                .isTrue();
     }
 }
