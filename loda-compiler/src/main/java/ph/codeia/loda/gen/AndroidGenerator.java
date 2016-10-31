@@ -26,11 +26,11 @@ public class AndroidGenerator implements Gen.View {
     private static final ClassName CONTEXT =
             ClassName.get("android.content", "Context");
     private static final ClassName MANAGER =
-            ClassName.get("android.support.v4.content", "LoaderManager");
+            ClassName.get("android.support.v4.app", "LoaderManager");
     private static final ClassName CALLBACKS =
-            ClassName.get("android.support.v4.content", "LoaderManager", "LoaderCallbacks");
+            ClassName.get("android.support.v4.app", "LoaderManager", "LoaderCallbacks");
     private static final ClassName LOADER =
-            ClassName.get("android.support.v4.app", "Loader");
+            ClassName.get("android.support.v4.content", "Loader");
     private static final ClassName BUNDLE =
             ClassName.get("android.os", "Bundle");
     private static final ClassName LODA_HOOK =
@@ -66,21 +66,17 @@ public class AndroidGenerator implements Gen.View {
         }
         CodeBlock.Builder dispatch = CodeBlock.builder().beginControlFlow("switch (id)");
         for (Gen.Producer p : model.asyncProducers()) {
-            dispatch.add("case $L:\n", p.id());
-            dispatch.indent();
+            dispatch.add("case $L:\n", p.id()).indent();
             initAsync(dispatch, p);
-            dispatch.addStatement("break");
-            dispatch.unindent();
+            dispatch.addStatement("break").unindent();
         }
         for (Gen.Consumer c : model.orphanConsumers()) {
-            dispatch.add("case $L:\n", c.id());
-            dispatch.indent();
+            dispatch.add("case $L:\n", c.id()).indent();
             initAsync(dispatch, c);
-            dispatch.addStatement("break");
-            dispatch.unindent();
+            dispatch.addStatement("break").unindent();
         }
-        dispatch.addStatement("default: throw new IllegalArgumentException(BAD_ID)");
-        dispatch.endControlFlow();
+        dispatch.addStatement("default: throw new IllegalArgumentException(BAD_ID)")
+                .endControlFlow();
         TypeVariableName t = TypeVariableName.get("T");
         TypeName tLoader = ParameterizedTypeName.get(LOADER, t);
         TypeName tSyncLoader = ParameterizedTypeName.get(SYNC_LOADER, t);
@@ -95,7 +91,9 @@ public class AndroidGenerator implements Gen.View {
                         .addParameter(t, "fallback")
                         .addStatement("$T loader = manager.getLoader(id)", tLoader)
                         .addCode(CodeBlock.builder()
-                                .beginControlFlow("if (loader == null || !(loader instanceof $T))", tSyncLoader)
+                                .beginControlFlow(
+                                        "if (loader == null || !(loader instanceof $T))",
+                                        SYNC_LOADER)
                                 .addStatement("return fallback")
                                 .endControlFlow()
                                 .addStatement("return (($T) loader).value()", tSyncLoader)
@@ -135,7 +133,7 @@ public class AndroidGenerator implements Gen.View {
         Gen.Consumer consumer = model.pairedConsumer(id);
         TypeName type = TypeName.get(producer.type()).box();
         TypeName wrapped = ParameterizedTypeName.get(RESULT, type);
-        MethodSpec create = callAsyncProducer(onCreate(wrapped), producer, wrapped, type);
+        MethodSpec create = callAsyncProducer(onCreate(wrapped), producer, type);
         MethodSpec finish = callAsyncConsumer(onFinish(wrapped), consumer);
         initAsync(branch, id, wrapped, create, finish);
     }
@@ -189,10 +187,9 @@ public class AndroidGenerator implements Gen.View {
     private static MethodSpec callAsyncProducer(
             MethodSpec.Builder method,
             Gen.Producer producer,
-            TypeName wrapped,
             TypeName payload
     ) {
-        TypeName loader = ParameterizedTypeName.get(ASYNC_LOADER, wrapped);
+        TypeName loader = ParameterizedTypeName.get(ASYNC_LOADER, payload);
         TypeSpec callable = TypeSpec.anonymousClassBuilder("")
                 .superclass(ParameterizedTypeName.get(CALLABLE, payload))
                 .addMethod(MethodSpec.methodBuilder("call")
@@ -243,7 +240,7 @@ public class AndroidGenerator implements Gen.View {
     }
 
     private static MethodSpec.Builder onFinish(TypeName payload) {
-        return MethodSpec.methodBuilder("onFinishLoading")
+        return MethodSpec.methodBuilder("onLoadFinished")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TypeName.VOID)
@@ -252,7 +249,7 @@ public class AndroidGenerator implements Gen.View {
     }
 
     private static MethodSpec onReset(TypeName payload) {
-        return MethodSpec.methodBuilder("onResetLoader")
+        return MethodSpec.methodBuilder("onLoaderReset")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TypeName.VOID)

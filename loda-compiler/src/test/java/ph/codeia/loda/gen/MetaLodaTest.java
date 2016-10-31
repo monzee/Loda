@@ -18,8 +18,6 @@ import javax.tools.JavaFileObject;
 
 /**
  * This file is a part of the Loda project.
- *
- * @author mon
  */
 
 public class MetaLodaTest {
@@ -35,7 +33,7 @@ public class MetaLodaTest {
         }
         Truth.assertAbout(JavaSourcesSubjectFactory.javaSources())
                 .that(files)
-                .processedWith(new LodaProcessor(), new MetaProcessor("/tmp"))
+                .processedWith(new AndroidLodaProcessor(), new MetaProcessor("/tmp"))
                 .compilesWithoutError();
         Truth.assertThat(new File("/tmp/ph/codeia/loda/AndroidLoda.java").canRead())
                 .isTrue();

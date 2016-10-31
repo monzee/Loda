@@ -9,6 +9,10 @@ public class LoaderManager {
         return null;
     }
 
+    public <T> Loader<T> getLoader(int id) {
+        return null;
+    }
+
     public interface LoaderCallbacks<T> {
         Loader<T> onCreateLoader(int id, Bundle bundle);
         void onLoadFinished(Loader<T> loader, T data);

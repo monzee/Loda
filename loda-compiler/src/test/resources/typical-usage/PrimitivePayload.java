@@ -11,4 +11,13 @@ public class PrimitivePayload {
     @Loda.Got(1)
     void got(int data) {
     }
+
+    @Loda.Async(2)
+    boolean asyncData() {
+        return true;
+    }
+
+    @Loda.Got(2)
+    void asyncGot(boolean data) {
+    }
 }

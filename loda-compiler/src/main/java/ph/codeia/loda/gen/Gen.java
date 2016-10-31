@@ -94,4 +94,10 @@ public interface Gen {
             ), e);
         }
     }
+
+    class CheckedConsumer extends ProcessingError {
+        CheckedConsumer(Element e) {
+            super("[checked] Consumer methods cannot have checked exceptions", e);
+        }
+    }
 }
